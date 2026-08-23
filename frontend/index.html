@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EnvGuard — In-Memory .env Security & Drift Auditor</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="navbar">
+            <div class="brand">
+                <div class="shield-icon">🛡️</div>
+                <div class="brand-text">
+                    <h1>EnvGuard</h1>
+                    <span class="badge-badge">Zero-Storage Auditor</span>
+                </div>
+            </div>
+            <div class="privacy-pill">
+                <span class="pulse-dot"></span>
+                100% In-Memory Local Audit
+            </div>
+        </header>
+
+        <!-- Main Hero Section -->
+        <main class="main-content">
+            <div class="hero-section">
+                <h2>Audit Environment Files for <span class="gradient-text">Secret Leaks</span> & Drift</h2>
+                <p>Drop your <code>.env</code>, <code>.env.example</code>, or <code>.env.production</code> files. Processing is performed strictly in RAM with zero disk persistence.</p>
+            </div>
+
+            <!-- Drag & Drop Zone -->
+            <div class="drop-zone" id="dropZone">
+                <div class="drop-icon">📁</div>
+                <h3>Drag & Drop your <code>.env</code> files here</h3>
+                <p>or click to browse from your computer (Multiple files supported)</p>
+                <input type="file" id="fileInput" multiple accept=".env,.env.*,text/plain" hidden>
+                <button class="btn-primary" onclick="document.getElementById('fileInput').click()">Select Files</button>
+            </div>
+
+            <!-- Uploaded Files List -->
+            <div class="selected-files" id="selectedFilesContainer" style="display: none;">
+                <h4>Selected Files for Audit:</h4>
+                <div class="file-chips" id="fileChips"></div>
+                <div class="action-buttons">
+                    <button class="btn-success" id="btnAudit" onclick="runAudit()">⚡ Run Security & Drift Audit</button>
+                    <button class="btn-secondary" id="btnSanitize" onclick="generateSanitized()">🪄 Generate .env.example</button>
+                    <button class="btn-text" onclick="clearFiles()">Clear All</button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-container" id="resultsContainer" style="display: none;">
+                <!-- Summary Metric Cards -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value" id="metricFiles">0</div>
+                        <div class="metric-label">Files Analyzed</div>
+                    </div>
+                    <div class="metric-card danger" id="secretsCard">
+                        <div class="metric-value" id="metricSecrets">0</div>
+                        <div class="metric-label">Secret Leaks Flagged</div>
+                    </div>
+                    <div class="metric-card warning">
+                        <div class="metric-value" id="metricDrift">0</div>
+                        <div class="metric-label">Key Drift Items</div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tabs-header">
+                    <button class="tab-btn active" onclick="switchTab('secretsTab')">🚨 Secret Leaks (<span id="secretsCountBadge">0</span>)</button>
+                    <button class="tab-btn" onclick="switchTab('driftTab')">🔄 Drift Matrix</button>
+                    <button class="tab-btn" onclick="switchTab('syntaxTab')">⚠️ Syntax Errors</button>
+                </div>
+
+                <!-- Tab 1: Secrets -->
+                <div class="tab-content active" id="secretsTab">
+                    <div class="table-card">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>File</th>
+                                    <th>Line</th>
+                                    <th>Variable Name</th>
+                                    <th>Issue Type</th>
+                                    <th>Severity</th>
+                                    <th>Redacted Value Preview</th>
+                                </tr>
+                            </thead>
+                            <tbody id="secretsTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Drift Matrix -->
+                <div class="tab-content" id="driftTab">
+                    <div class="table-card">
+                        <table class="data-table">
+                            <thead>
+                                <tr id="driftHeaderRow">
+                                    <th>Environment Variable Key</th>
+                                    <!-- Dynamic File Columns -->
+                                </tr>
+                            </thead>
+                            <tbody id="driftTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Syntax Errors -->
+                <div class="tab-content" id="syntaxTab">
+                    <div class="syntax-list" id="syntaxList">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for .env.example Export -->
+            <div class="modal-overlay" id="exampleModal" style="display: none;">
+                <div class="modal-card">
+                    <div class="modal-header">
+                        <h3>Sanitized <code>.env.example</code> Output</h3>
+                        <button class="close-btn" onclick="closeModal()">✕</button>
+                    </div>
+                    <div class="modal-body">
+                        <pre class="code-preview" id="sanitizedCodePreview"></pre>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-primary" onclick="downloadSanitizedFile()">Download .env.example</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
