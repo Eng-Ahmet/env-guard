@@ -1,0 +1,20 @@
+# Git files
+.git
+.gitignore
+
+# Compiled binaries & local build artifacts
+envguard
+*.exe
+*.test
+*.out
+vendor/
+
+# Documentation & IDE
+README.md
+architecture/
+agents/
+.vscode/
+.idea/
+
+# Local test env files
+.env*
