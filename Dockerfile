@@ -18,6 +18,11 @@ RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o envguard ./backend/mai
 # Final Lightweight Runtime Stage
 FROM alpine:3.19
 
+# OCI Image Labels connecting package to GitHub Repository (GHCR)
+LABEL org.opencontainers.image.source=https://github.com/Eng-Ahmet/env-guard
+LABEL org.opencontainers.image.description="Zero-Dependency In-Memory .env Security & Consistency Auditor"
+LABEL org.opencontainers.image.licenses=MIT
+
 RUN apk --no-cache add ca-certificates
 
 WORKDIR /app
