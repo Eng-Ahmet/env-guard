@@ -8,8 +8,8 @@ Develop a responsive, secure web interface for environment variable management a
 
 ## Responsibilities & UI Guidelines
 * Build sleek glassmorphic UI components with high contrast dark mode.
-* Icons MUST use **Font Awesome 6** (`fa-solid`) exclusively; unicode/emoji symbols are forbidden.
-* Always enforce host port mapping (`8080:80`) for the frontend container in `docker-compose.yml`.
+* Icons MUST use **Font Awesome 6** (`fa-solid`) exclusively; unicode/emoji symbols are prohibited.
+* Connect frontend containers through the shared `caddy_proxy` external network without binding host ports directly to prevent port collisions.
 
 ## Technology Context
 * HTML5, Vanilla CSS / Tailwind, JavaScript.
